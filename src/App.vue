@@ -24,6 +24,12 @@ export default {
         users: false,
         departments: false,
         stores: false,
+        assets: {
+          mark: false,
+          requisitions: false,
+          transfers: false,
+          reports: false,
+        }
       },
       modals: {
         logoutModal: null,
@@ -56,6 +62,14 @@ export default {
       this.pathname = path;
       await this.checkAuthenticStatus();
     },
+    updateAssetsNav(view) {
+      switch (view) {
+        case 'requisitions': {
+          this.changeLocation("/assets");
+          this.nav.assets.requisitions = true;
+        } break;
+      }
+    },
     showLogoutModal() {
       this.modals.logoutModal = this.Modal.getOrCreateInstance(
         document.getElementById("logout-modal"), { backdrop: "static", keyboard: false }
@@ -86,6 +100,8 @@ export default {
         this.nav.departments = isActive;
       } else if (path == "/stores") {
         this.nav.stores = isActive;
+      } else if (path == "/assets") {
+        this.nav.assets = isActive;
       }
     },
   },
@@ -181,11 +197,11 @@ export default {
                   </div>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Requisitions</a></li>
+                  <li><a @click="updateAssetsNav('requisitions')" class="dropdown-item" :class="{active: nav.assets.requisitions}" href="#">Requisitions</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Transfers</a></li>
+                  <li><a @click="updateAssetsNav('transfers')" class="dropdown-item" href="#">Transfers</a></li>
                   <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Reports</a></li>
+                  <li><a @click="updateAssetsNav('reports')" class="dropdown-item" href="#">Reports</a></li>
                 </ul>
               </li>
               <li class="nav-item">
@@ -202,7 +218,7 @@ export default {
       </div>
     </div>
   </div>
-  <div class="col-10">
+  <div class="col">
     <div class="row">
       <div id="topBar" class="row justify-content-center mb-2 sticky-top" v-if="user">
         <a class="nav-link text-center" role="button">
