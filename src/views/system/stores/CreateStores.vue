@@ -97,7 +97,7 @@ export default {
                         autocomplete="true" required />
                 </div>
                 <div class="mb-3">
-                    <label for="last-name" class="form-label">Last Name</label>
+                    <label for="description" class="form-label">Description</label>
                     <textarea v-model="description" class="form-control" id="description" autocomplete="true">
                     </textarea>
                 </div>

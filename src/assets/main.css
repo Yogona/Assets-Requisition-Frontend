@@ -49,5 +49,6 @@ input.form-control:focus, textarea.form-control:focus{
 @media (hover: hover) {
   a:hover {
     background-color: #19A7CE;
+    cursor: pointer;
   }
 }

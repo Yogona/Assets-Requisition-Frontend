@@ -1,7 +1,8 @@
 <script>
 import { BIconBoxArrowDownRight, BIconBoxArrowInRight } from 'bootstrap-icons-vue';
 export default {
-  emmits: ['locationChange'],
+  props: ['user'],
+  emits: ['locationChange', 'user'],
   components: {
     BIconBoxArrowDownRight,
     BIconBoxArrowInRight
