@@ -10,16 +10,32 @@ export default {
         return {
             isLoading: false,
             searchQuery: null,
-            selectedRole: 'all',
+
             collections: {
                 roles: null,
                 users: null,
+                departments: null,
             },
             message: "Needs to get users.",
             pagination: {
                 records: 10,
                 currentPage: 1,
             },
+
+            id: null,
+            firstName:null,
+            lastName: null,
+            gender: null,
+            selectedRole: "all",
+            selectedDepartment: null,
+
+            notification: {
+                title: null,
+                message: null,
+            },
+
+            toast: null,
+            deleteModal: null,
         };
     },
     methods: {
@@ -80,23 +96,231 @@ export default {
             }).finally(() => {
                 this.isLoading = false;
             });
+        },
+        async getDepartments() {
+            await this.axios.get(this.api + "/departs").then((res) => {
+                if (res.status == 200) {
+                    this.collections.departments = res.data.data;
+                }
+            });
+        },
+
+        preFillUpdatingFields(user) {
+            this.id = user.id;
+            this.firstName = user.first_name;
+            this.lastName = user.last_name;
+            this.gender = user.gender;
+            this.selectedRole = user.role.id;
+            const depart = user.department.id;
+
+            this.selectedDepartment = (depart == null) ? null : depart.id;
+
+            // this.username = user.username;
+            // this.email = user.email;
+            // this.phone = user.phone;
+        },
+        clearFields() {
+            this.firstName = null;
+            this.lastName = null;
+            this.username = null;
+            this.gender = null;
+            this.email = null;
+            this.phone = null;
+            this.selectedRole = "all";
+            this.selectedDepartment = null;
+        },
+        async updateProfile() {
+            if (this.$refs.updateProfileForm.checkValidity()) {
+                this.isLoading = true;
+
+                const data = {
+                    "first_name": this.firstName,
+                    "last_name": this.lastName,
+                    "gender": this.gender,
+                    "role": this.selectedRole,
+                    "department": this.selectedDepartment
+                };
+
+                await this.axios.patch(this.api + "/users/update/" + this.id, data).then((res) => {
+                    const resData = res.data;
+                    this.notification.title = "Succeeded!";
+                    this.notification.message = resData.message;
+
+                    this.clearFields();
+
+                    this.getUsers();
+                }).catch((err) => {
+                    const res = err.response;
+                    const resData = res.data;
+
+                    if (res.status == 422) {
+                        this.notification.title = resData.message;
+                        this.notification.message = resData.data;
+                    } else {
+                        this.notification.title = "Failed!";
+                        this.notification.message = resData.message;
+                    }
+                }).finally(() => {
+                    this.isLoading = false;
+                    this.toast.show();
+                });
+
+            }
+        },
+
+        showDeleteModalConfirmation(user) {
+            this.id = user.id;
+            this.deleteModal = this.Modal.getOrCreateInstance(
+                document.getElementById("delete-user-modal"), { backdrop: "static", keyboard: false }
+            );
+            this.deleteModal.show();
+        },
+        async deleteUser() {
+            this.isLoading = true;
+
+            this.axios.delete(this.api + "/users/delete/" + this.id).then((res) => {
+                const resData = res.data;
+                this.notification.title = "Succeeded!";
+                this.notification.message = resData.message;
+                this.getUsers();
+            }).catch((err) => {
+                console.log(err);
+                const res = err.response;
+                const resData = res.data;
+
+                this.notification.title = "Failed!";
+                this.notification.message = resData.message;
+            }).finally(() => {
+                this.isLoading = false;
+                this.toast.show();
+                this.deleteModal.hide();
+            });
         }
     },
     mounted() {
         this.getRoles();
         this.getUsers();
+        this.getDepartments();
+        this.toast = this.Toast.getOrCreateInstance(this.$refs.feedbackToast);
     }
 }
 </script>
 
 <template>
+    <!-- Toast -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div ref="feedbackToast" id="feedbackToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <!-- <img src="..." class="rounded me-2" alt="..."> -->
+                <strong class="me-auto">{{ notification.title }}</strong>
+                <!-- <small>11 mins ago</small> -->
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ notification.message }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Profile Modal -->
+    <div class="modal" id="update-profile-modal" tabindex="-1"
+        aria-labelledby="updateProfileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content container-bg">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateProfileLabel">Update a user profile</h1>
+                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form ref="updateProfileForm" @submit.prevent="onSubmit">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="first-name" class="form-label">First Name</label>
+                            <input type="text" v-model="firstName" class="form-control" id="first-name" aria-describedby="first-name" autocomplete="true" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last-name" class="form-label">Last Name</label>
+                            <input type="text" v-model="lastName" class="form-control" id="last-name" autocomplete="true" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select placeholder="Select" v-model="gender" class="form-control" id="gender">
+                                <option disabled selected>Select</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <select placeholder="Select" v-model="selectedRole" class="form-control" id="role">
+                                <option disabled selected>Select</option>
+                                <option v-for="role in collections.roles" :value="role.id">{{ role.name }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department</label>
+                            <select  placeholder="Select" v-model="selectedDepartment" class="form-control" id="deparment">
+                                <option value="null">No department</option>
+                                <option v-for="depart in collections.departments" :value="depart.id">{{ depart.name }}</option>
+                            </select>
+                        </div>
+                        <!-- <div class="row">
+                            <button type="button" class="btn btn-primary mb-2"  data-bs-target="#change-username-modal" data-bs-toggle="modal">Change username</button>
+                            <button type="button" class="btn btn-primary mb-2"  data-bs-target="#change-email-modal" data-bs-toggle="modal">Change email</button>
+                            <button type="button" class="btn btn-primary mb-2"  data-bs-target="#change-phone-modal" data-bs-toggle="modal">Change phone</button>
+                            <button type="button" class="btn btn-primary mb-2 disabled"  data-bs-target="#change-phone-modal" data-bs-toggle="modal">Reset password</button>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" :class="{ disabled: isLoading }" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" :class="{ disabled: isLoading }" @click="updateProfile()" class="btn btn-dark">
+                            <span :hidden="isLoading">Update</span>
+                            <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete User Modal -->
+    <div class="modal fade" id="delete-user-modal" tabindex="-1"
+        aria-labelledby="deleteUserLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content container-bg">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteUserLabel">Delete user!</h1>
+                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        Do you want to continue?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" :class="{ disabled: isLoading }" class="btn btn-secondary"
+                        data-bs-dismiss="modal">No</button>
+                    <button type="submit" :class="{ disabled: isLoading }" @click="deleteUser()" class="btn btn-dark">
+                        <span :hidden="isLoading">Yes</span>
+                        <div :hidden="!isLoading" class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row mb-1">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
             <form class="d-flex" role="search">
                 <input v-model="searchQuery" class="form-control me-2" type="search" placeholder="Type to search" aria-label="Search">
             </form>
-        </div>
+        </div> -->
         <div class="col">
+            Role
             <select v-model="selectedRole" @change="getUsers()" class="form-control">
                 <option disabled>Select role</option>
                 <option value="all">All</option>
@@ -143,12 +367,12 @@ export default {
                     <td v-else>NULL</td>
                     <td>
                         <div class="row gx-3">
-                            <!-- <div class="col">
+                            <div class="col">
                                 <BIconPenFill @click="preFillUpdatingFields(user)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-profile-modal" />
                             </div>
                             <div class="col">
                                 <BIconTrash class="icon-color" @click="showDeleteModalConfirmation(user)" data-bs-toggle="modal" />
-                            </div> -->
+                            </div>
                         </div>
                     </td>
                 </tr>

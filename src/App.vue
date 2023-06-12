@@ -122,6 +122,11 @@ export default {
       }
     },
   },
+  computed: {
+    dynamicColClassDueToNavPresence(){
+      return (this.user) ? "col-md-10" : "col-md-12";
+    },
+  },
   async mounted() {
     this.pathname = location.pathname;
     await this.checkAuthenticStatus();
@@ -159,100 +164,104 @@ export default {
       </div>
   </div>
 
-  <div v-if="user" class="col-2">
-    <div id="navbar" class="col-md-2 container-bg sticky-top">
-      <div class="h1 text-center">
-        <a class="navbar-brand" href="#">ARTMS</a>
-      </div>
-      <nav id="left-nav" class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#leftNavContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="leftNavContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-column">
-              <li class="nav-item">
-                <RouterLink class="col nav-link" :class="{active:nav.home}" :aria-current="{page:nav.home}" @click="changeLocation('/home')" to="/home">
-                  <div class="row justify-content-center text-center">
-                    <BIconHouse />
-                    <span class="col">Home</span>
-                  </div>
-                </RouterLink>
-              </li>
-              <li v-if="user.role.id == 1" class="nav-item">
-                <RouterLink class="col nav-link" :class="{ active: nav.users }" :aria-current="{ page: nav.users }" @click="changeLocation('/users')" to="/users">
-                  <div class="row justify-content-center text-center">
-                    <BIconPeople />
-                    <span class="col">Users</span>
-                  </div>
-                </RouterLink>
-              </li>
-              <li v-if="user.role.id == 1" class="nav-item">
-                <RouterLink class="nav-link col" :class="{ active: nav.departments }" :aria-current="{ page: nav.departments }" @click="changeLocation('/departments')" to="/departments">
-                  <div class="row justify-content-center text-center">
-                    <BIconBuilding />
-                    <span class="col">Departments</span>
-                  </div>
-                </RouterLink>
-              </li>
-              <li v-if="user.role.id == 1" class="nav-item">
-                <RouterLink class="nav-link col" :class="{ active: nav.stores }" :aria-current="{ page: nav.stores }" @click="changeLocation('/stores')" to="/stores">
-                  <div class="row justify-content-center text-center">
-                    <BIconBuilding />
-                    <span class="col">Stores</span>
-                  </div>
-                </RouterLink>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="#" role="button" :class="{active:nav.assets.mark}" aria-expanded="false">
-                  <div class="row justify-content-center text-center">
-                    <BIconCollection />
-                    Assets
-                  </div>
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <RouterLink to="/requisitions" @click="updateAssetsNav('requisitions')" class="dropdown-item" :class="{active: nav.assets.requisitions}">
-                      Requisitions
-                    </RouterLink>
-                  </li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <a @click="updateAssetsNav('transfers')" class="disabled dropdown-item" :class="{ active: nav.assets.transfers }">
-                      Transfers
-                    </a>
-                  </li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <a @click="updateAssetsNav('reports')" class="disabled dropdown-item" :class="{ active: nav.assets.reports }">
-                      Reports
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+  <div class="row justify-content-between">
+    <div v-if="user" class="col">
+      <div id="navbar" class="container-bg sticky-top">
+        <div class="h1 text-center">
+          <a class="navbar-brand" href="#">ARTMS</a>
         </div>
-      </nav>
-      <div class="row mx-2">
-        <button @click="showLogoutModal()" class="btn btn-success " type="button">
-          Logout
-        </button>
+        <nav id="left-nav" class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#leftNavContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="leftNavContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-column">
+                <li class="nav-item">
+                  <RouterLink class="col nav-link" :class="{ active: nav.home }" :aria-current="{ page: nav.home }" @click="changeLocation('/home')" to="/home">
+                    <div class="row justify-content-center text-center">
+                      <BIconHouse />
+                      <span class="col">Home</span>
+                    </div>
+                  </RouterLink>
+                </li>
+                <li v-if="user.role.id == 1" class="nav-item">
+                  <RouterLink class="col nav-link" :class="{ active: nav.users }" :aria-current="{ page: nav.users }" @click="changeLocation('/users')" to="/users">
+                    <div class="row justify-content-center text-center">
+                      <BIconPeople />
+                      <span class="col">Users</span>
+                    </div>
+                  </RouterLink>
+                </li>
+                <li v-if="user.role.id == 1" class="nav-item">
+                  <RouterLink class="nav-link col" :class="{ active: nav.departments }" :aria-current="{ page: nav.departments }" @click="changeLocation('/departments')" to="/departments">
+                    <div class="row justify-content-center text-center">
+                      <BIconBuilding />
+                      <span class="col">Departments</span>
+                    </div>
+                  </RouterLink>
+                </li>
+                <li v-if="user.role.id == 1" class="nav-item">
+                  <RouterLink class="nav-link col" :class="{ active: nav.stores }" :aria-current="{ page: nav.stores }" @click="changeLocation('/stores')" to="/stores">
+                    <div class="row justify-content-center text-center">
+                      <BIconBuilding />
+                      <span class="col">Stores</span>
+                    </div>
+                  </RouterLink>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="#" role="button" :class="{ active: nav.assets.mark }" aria-expanded="false">
+                    <div class="row justify-content-center text-center">
+                      <BIconCollection />
+                      Assets
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <RouterLink to="/requisitions" @click="updateAssetsNav('requisitions')" class="dropdown-item" :class="{ active: nav.assets.requisitions }">
+                        Requisitions
+                      </RouterLink>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a @click="updateAssetsNav('transfers')" class="disabled dropdown-item" :class="{ active: nav.assets.transfers }">
+                        Transfers
+                      </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a @click="updateAssetsNav('reports')" class="disabled dropdown-item" :class="{ active: nav.assets.reports }">
+                        Reports
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <div class="row mx-2">
+          <button @click="showLogoutModal()" class="btn btn-success " type="button">
+            Logout
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div :class="dynamicColClassDueToNavPresence">
+      <div class="row">
+        <div id="topBar" class="row justify-content-center mb-2 sticky-top" v-if="user">
+          <a class="nav-link text-center" role="button">
+            <BIconPersonBadgeFill style="font-size: 2rem;" />
+            {{ user.first_name }} {{ user.last_name }} - {{ user.role.name }}
+          </a>
+        </div>
+        <div>
+          <RouterView @location-change="(newPath) => { changeLocation(newPath); checkAuthenticStatus(); }" :user="user" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col">
-    <div class="row">
-      <div id="topBar" class="row justify-content-center mb-2 sticky-top" v-if="user">
-        <a class="nav-link text-center" role="button">
-          <BIconPersonBadgeFill style="font-size: 2rem;" />
-          {{ user.first_name }} {{ user.last_name }} - {{ user.role.name }}
-        </a>
-      </div>
-      <div>
-        <RouterView @location-change="(newPath) => { changeLocation(newPath); checkAuthenticStatus(); }" :user="user" />
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -282,10 +291,9 @@ body {
   display: block;
 }
 
-@media(min-width: 720px) {
+@media(min-width: 850px) {
   #navbar{
     height: 39.1rem;
-    width: fit-content;
   }
 }
 

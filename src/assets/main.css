@@ -46,6 +46,11 @@ input.form-control:focus, textarea.form-control:focus{
   box-shadow: 1px 1px 5px 1px #146C94;
 }
 
+.icon-color {
+  cursor: pointer;
+  color: #19A7CE;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: #19A7CE;
