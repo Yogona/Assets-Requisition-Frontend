@@ -60,7 +60,7 @@ export default {
 </script>
 
 <template>
-  <main>
+  <main class="ms-3">
     <ul class="nav nav-pills justify-content-evenly text-center mb-1">
       <li class="nav-item">
         <button class="nav-link" @click="activeView = 'add'" :class="{ active: activePill.add }"

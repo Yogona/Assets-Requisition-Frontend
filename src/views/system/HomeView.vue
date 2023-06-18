@@ -28,15 +28,15 @@ export default {
 
 <template>
   <main>
-    <div class="row gy-5 justify-content-between pt-5">
-      <div class="container-bg white-text col-md-4 summary">
+    <div class="row gy-5 justify-content-evenly pt-5">
+      <div v-if="user.role == 1" class="container-bg white-text col-md-4 summary">
         <div class="row justify-content-center text-center">
           <BIconPeople />
           <span>{{ users }} Users</span>
         </div>
       </div>
 
-      <div class="container-bg white-text col-md-4 summary">
+      <div v-if="user.role == 1" class="container-bg white-text col-md-4 summary">
         <div class="row justify-content-center text-center">
           <BIconBuilding />
           <span>{{ departs }} Departments</span>

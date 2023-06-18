@@ -56,7 +56,7 @@ export default {
         },
         checkView() {
             let roleId = this.user.role.id;
-            if (roleId != 1 && roleId != 7 && roleId != 8) {
+            if (roleId != 1 && roleId != 7) {
                 this.currentView = ViewIssueNotes;
                 this.activePill.viewNotes = true;
             }
@@ -72,7 +72,7 @@ export default {
 <template>
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
-            <li v-if="user.role.id == 1 || user.role.id == 7 || user.role.id == 8" class="nav-item">
+            <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
                 <button class="nav-link" @click="activeView = 'send-note'" :class="{ active: activePill.sendNote }"
                     :aria-current="{ page: activePill.sendNote }">
                     Send Note
