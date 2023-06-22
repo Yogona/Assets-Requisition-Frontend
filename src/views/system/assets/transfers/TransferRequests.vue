@@ -13,10 +13,10 @@ export default {
             isLoading: false,
             searchQuery: null,
             issueNotes: null,
-            message: "Did not fetch assets.",
+            message: "Did not fetch assets transfer requests.",
 
             collections: {
-                assets: null,
+                requests: null,
             },
 
             pagination: {
@@ -42,7 +42,7 @@ export default {
             this.message = resData.message;
             const pageData = resData.data;
             //And this third data is from pagination
-            this.collections.assets = pageData.data;
+            this.collections.requests = pageData.data;
 
             //Pagination details
             this.pagination = {
@@ -71,11 +71,11 @@ export default {
             });
             this.pagination.links = tempLinks;
         },
-        async getAssets() {
+        async getTransferRequests() {
             this.isLoading = true;
 
             let uri = this.api;
-            uri += "/assets/records/";
+            uri += "/assets/transfers/records/";
             uri += this.pagination.records;
             uri += "?page" + this.pagination.currentPage;
 
@@ -120,7 +120,7 @@ export default {
         }
     },
     mounted() {
-        this.getAssets();
+        this.getTransferRequests();
         this.notification.modal = this.Modal.getOrCreateInstance(
             document.getElementById("issueNoteNotification"), { backdrop: "static", keyboard: false }
         );
@@ -159,26 +159,26 @@ export default {
     </div> -->
 
     <div v-if="activeView == null" class="row">
-        <Progress v-if="isLoading" message="Fetching assets." />
+        <Progress v-if="isLoading" message="Fetching assets transfer requests." />
 
-        <h2 class="p-5 text-center" v-else-if="collections.assets == null">
+        <h2 class="p-5 text-center" v-else-if="collections.requests == null">
             {{ message }}
         </h2>
-        <h2 class="p-5 text-center" v-else-if="collections.assets.length == 0">
+        <h2 class="p-5 text-center" v-else-if="collections.requests.length == 0">
             {{ message }}
         </h2>
         <table v-else class="table table-hover">
             <thead>
                 <tr>
-                    <th>Asset Code</th>
-                    <th>Description</th>
+                    <th>From department</th>
+                    <th>To department</th>
                     <th>Unit</th>
                     <th>Quantity</th>
                     <th>Department</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="asset in collections.assets">
+                <tr v-for="request in collections.requests">
                     <td>{{ asset.instrument }}</td>
                     <td>{{ }}</td>
                     <td>{{ }}</td>

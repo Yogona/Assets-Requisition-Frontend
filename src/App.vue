@@ -84,12 +84,12 @@ export default {
         } break;
 
         case 'transfers': {
-          this.changeLocation("/assets");
+          this.changeLocation("/transfers");
           this.nav.assets.transfers = true;
         } break;
 
         case 'reports': {
-          this.changeLocation("/assets");
+          this.changeLocation("/reports");
           this.nav.assets.reports = true;
         } break;
       }
@@ -243,7 +243,7 @@ export default {
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                      <RouterLink to="reports" @click="updateAssetsNav('reports')" class="dropdown-item" :class="{ active: nav.assets.reports }">
+                      <RouterLink to="reports" @click="updateAssetsNav('reports')" class="dropdown-item disabled" :class="{ active: nav.assets.reports }">
                         Reports
                       </RouterLink>
                     </li>

@@ -179,11 +179,11 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="asset in collections.assets">
-                    <td>{{ asset.instrument }}</td>
-                    <td>{{  }}</td>
-                    <td>{{  }}</td>
+                    <td>{{ asset.instrument.instrument_code }}</td>
+                    <td>{{ asset.instrument.description }}</td>
+                    <td>{{ asset.instrument.unit }}</td>
                     <td>{{ asset.quantity }}</td>
-                    <td>{{ asset.department }}</td>    
+                    <td>{{ asset.department.name }}</td>    
                     <td>
                         <div class="row gx-3">
                             <!-- <div class="col">

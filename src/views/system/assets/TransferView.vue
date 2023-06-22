@@ -1,10 +1,10 @@
 <script>
-import RegisterInstruments from './instruments/RegisterInstruments.vue';
-import ViewInstruments from './instruments/ViewInstruments.vue';
+import AssetsTransferForm from './transfers/AssetsTransferForm.vue';
+import TransferRequests from './transfers/TransferRequests.vue';
 
 export default {
     components: {
-        RegisterInstruments, ViewInstruments
+        AssetsTransferForm, TransferRequests
     },
     props: {
         user: Object,
@@ -12,11 +12,11 @@ export default {
     data() {
         return {
             decentUser: null,
-            currentView: RegisterInstruments,
-            activeView: 'register-instruments',
+            currentView: AssetsTransferForm,
+            activeView: 'fill-form',
             activePill: {
-                registerInstruments: true,
-                viewInstruments: false,
+                assetsTransferForm: true,
+                transferRequests: false,
             },
         };
     },
@@ -30,26 +30,26 @@ export default {
     methods: {
         changeView(name) {
             switch (name) {
-                case 'register-instruments': {
-                    this.currentView = RegisterInstruments;
+                case 'fill-form': {
+                    this.currentView = AssetsTransferForm;
                 }
                     break;
 
-                case 'view-instruments': {
-                    this.currentView = ViewInstruments;
+                case 'requests': {
+                    this.currentView = TransferRequests;
                 }
                     break;
             }
         },
         updateNavHighlight(view, isActive) {
             switch (view) {
-                case "register-instruments": {
-                    this.activePill.registerInstruments = isActive;
+                case "fill-form": {
+                    this.activePill.assetsTransferForm = isActive;
                 }
                     break;
 
-                case "view-instruments": {
-                    this.activePill.viewInstruments = isActive;
+                case "requests": {
+                    this.activePill.transferRequests = isActive;
                 }
                     break;
             }
@@ -58,12 +58,12 @@ export default {
             let roleId = this.user.role.id;
             if (roleId != 1 && roleId != 7) {
                 this.currentView = viewInstruments;
-                this.activePill.viewInstruments = true;
+                this.activePill.transferRequests = true;
             }
         }
     },
     mounted() {
-        // this.checkView();
+        this.checkView();
 
     }
 }
@@ -73,16 +73,16 @@ export default {
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
             <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
-                <button class="nav-link" @click="activeView = 'register-instruments'"
-                    :class="{ active: activePill.registerInstruments }"
-                    :aria-current="{ page: activePill.registerInstruments }">
-                    Register Assets
+                <button class="nav-link" @click="activeView = 'fill-form'"
+                    :class="{ active: activePill.assetsTransferForm }"
+                    :aria-current="{ page: activePill.assetsTransferForm }">
+                    Transfer Form
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" @click="activeView = 'view-instruments'"
-                    :class="{ active: activePill.viewInstruments }" :aria-current="{ page: activePill.viewInstruments }">
-                    View Assets
+                <button class="nav-link" @click="activeView = 'requests'"
+                    :class="{ active: activePill.transferRequests }" :aria-current="{ page: activePill.transferRequests }">
+                    Transfer Requests
                 </button>
             </li>
         </ul>

@@ -13,10 +13,10 @@ export default {
         return {
             decentUser: null,
             currentView: RegisterInstruments,
-            activeView: 'register-instruments',
+            activeView: 'register-assets',
             activePill: {
-                registerInstruments: true,
-                viewInstruments: false,
+                registerAssets: true,
+                viewAssets: false,
             },
         };
     },
@@ -30,12 +30,12 @@ export default {
     methods: {
         changeView(name) {
             switch (name) {
-                case 'register-instruments': {
+                case 'register-assets': {
                     this.currentView = RegisterInstruments;
                 }
                     break;
 
-                case 'view-instruments': {
+                case 'view-assets': {
                     this.currentView = ViewInstruments;
                 }
                     break;
@@ -43,13 +43,13 @@ export default {
         },
         updateNavHighlight(view, isActive) {
             switch (view) {
-                case "register-instruments": {
-                    this.activePill.registerInstruments = isActive;
+                case "register-assets": {
+                    this.activePill.registerAssets = isActive;
                 }
                     break;
 
-                case "view-instruments": {
-                    this.activePill.viewInstruments = isActive;
+                case "view-assets": {
+                    this.activePill.viewAssets = isActive;
                 }
                     break;
             }
@@ -58,13 +58,12 @@ export default {
             let roleId = this.user.role.id;
             if (roleId != 1 && roleId != 7) {
                 this.currentView = viewInstruments;
-                this.activePill.viewInstruments = true;
+                this.activePill.viewAssets = true;
             }
         }
     },
     mounted() {
-        // this.checkView();
-
+        this.checkView();
     }
 }
 </script>
@@ -73,14 +72,14 @@ export default {
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
             <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
-                <button class="nav-link" @click="activeView = 'register-instruments'" :class="{ active: activePill.registerInstruments }"
-                    :aria-current="{ page: activePill.registerInstruments }">
+                <button class="nav-link" @click="activeView = 'register-assets'" :class="{ active: activePill.registerAssets }"
+                    :aria-current="{ page: activePill.registerAssets }">
                     Register Assets
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" @click="activeView = 'view-instruments'" :class="{ active: activePill.viewInstruments }"
-                    :aria-current="{ page: activePill.viewInstruments }">
+                <button class="nav-link" @click="activeView = 'view-assets'" :class="{ active: activePill.viewAssets }"
+                    :aria-current="{ page: activePill.viewAssets }">
                     View Assets
                 </button>
             </li>
