@@ -180,10 +180,10 @@ export default {
             <tbody>
                 <tr v-for="asset in collections.assets">
                     <td>{{ asset.instrument }}</td>
-                    <td>{{  }}</td>
-                    <td>{{  }}</td>
+                    <td>{{ }}</td>
+                    <td>{{ }}</td>
                     <td>{{ asset.quantity }}</td>
-                    <td>{{ asset.department }}</td>    
+                    <td>{{ asset.department }}</td>
                     <td>
                         <div class="row gx-3">
                             <!-- <div class="col">
@@ -240,8 +240,9 @@ export default {
                 </tr>
             </tfoot>
         </table>
-</div>
+    </div>
 
-<component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" /></template>
+    <component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" />
+</template>
 
 <style></style>

@@ -217,7 +217,7 @@ export default {
                   </RouterLink>
                 </li> -->
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="#" role="button" :class="{ active: nav.assets.mark }" aria-expanded="false">
+                  <a class="nav-link" role="button" :class="{ active: nav.assets.mark }" aria-expanded="false">
                     <div class="row justify-content-center text-center">
                       <BIconCollection />
                       Assets
@@ -237,7 +237,7 @@ export default {
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                      <RouterLink to="transfers" @click="updateAssetsNav('transfers')" class="dropdown-item" :class="{ active: nav.assets.transfers }">
+                      <RouterLink to="/transfers" @click="updateAssetsNav('transfers')" class="dropdown-item" :class="{ active: nav.assets.transfers }">
                         Transfers
                       </RouterLink>
                     </li>

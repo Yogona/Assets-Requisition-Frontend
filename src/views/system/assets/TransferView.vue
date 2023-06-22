@@ -73,14 +73,15 @@ export default {
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
             <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
-                <button class="nav-link" @click="activeView = 'register-instruments'" :class="{ active: activePill.registerInstruments }"
+                <button class="nav-link" @click="activeView = 'register-instruments'"
+                    :class="{ active: activePill.registerInstruments }"
                     :aria-current="{ page: activePill.registerInstruments }">
                     Register Assets
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" @click="activeView = 'view-instruments'" :class="{ active: activePill.viewInstruments }"
-                    :aria-current="{ page: activePill.viewInstruments }">
+                <button class="nav-link" @click="activeView = 'view-instruments'"
+                    :class="{ active: activePill.viewInstruments }" :aria-current="{ page: activePill.viewInstruments }">
                     View Assets
                 </button>
             </li>
