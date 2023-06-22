@@ -1,10 +1,10 @@
 <script>
-import SendIssueNote from './requisitions/SendIssueNote.vue';
-import ViewIssueNotes from './requisitions/ViewIssueNotes.vue';
+import RegisterInstruments from './instruments/RegisterInstruments.vue';
+import ViewInstruments from './instruments/ViewInstruments.vue';
 
 export default {
     components: {
-        SendIssueNote, ViewIssueNotes
+        RegisterInstruments, ViewInstruments
     },
     props: {
         user: Object,
@@ -12,11 +12,11 @@ export default {
     data() {
         return {
             decentUser: null,
-            currentView: SendIssueNote,
-            activeView: 'send-note',
+            currentView: RegisterInstruments,
+            activeView: 'register-instruments',
             activePill: {
-                sendNote: true,
-                viewNotes: false,
+                registerInstruments: true,
+                viewInstruments: false,
             },
         };
     },
@@ -30,26 +30,26 @@ export default {
     methods: {
         changeView(name) {
             switch (name) {
-                case 'send-note': {
-                    this.currentView = SendIssueNote;
+                case 'register-instruments': {
+                    this.currentView = RegisterInstruments;
                 }
                     break;
 
-                case 'view-notes': {
-                    this.currentView = ViewIssueNotes;
+                case 'view-instruments': {
+                    this.currentView = ViewInstruments;
                 }
                     break;
             }
         },
         updateNavHighlight(view, isActive) {
             switch (view) {
-                case "send-note": {
-                    this.activePill.sendNote = isActive;
+                case "register-instruments": {
+                    this.activePill.registerInstruments = isActive;
                 }
                     break;
 
-                case "view-notes": {
-                    this.activePill.viewNotes = isActive;
+                case "view-instruments": {
+                    this.activePill.viewInstruments = isActive;
                 }
                     break;
             }
@@ -57,14 +57,14 @@ export default {
         checkView() {
             let roleId = this.user.role.id;
             if (roleId != 1 && roleId != 7) {
-                this.currentView = ViewIssueNotes;
-                this.activePill.viewNotes = true;
+                this.currentView = viewInstruments;
+                this.activePill.viewInstruments = true;
             }
         }
     },
     mounted() {
-        this.checkView();
-        
+        // this.checkView();
+
     }
 }
 </script>
@@ -73,15 +73,15 @@ export default {
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
             <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
-                <button class="nav-link" @click="activeView = 'send-note'" :class="{ active: activePill.sendNote }"
-                    :aria-current="{ page: activePill.sendNote }">
-                    Send Note
+                <button class="nav-link" @click="activeView = 'send-note'" :class="{ active: activePill.registerInstruments }"
+                    :aria-current="{ page: activePill.registerInstruments }">
+                    Register Instruments
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" @click="activeView = 'view-notes'" :class="{ active: activePill.viewNotes }"
-                    :aria-current="{ page: activePill.viewNotes }">
-                    View Notes
+                <button class="nav-link" @click="activeView = 'view-notes'" :class="{ active: activePill.viewInstruments }"
+                    :aria-current="{ page: activePill.viewInstruments }">
+                    View Instruments
                 </button>
             </li>
         </ul>

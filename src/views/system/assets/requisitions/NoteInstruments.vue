@@ -1,22 +1,22 @@
 <script>
 import Progress from '../../../../components/Progress.vue';
 import { BIconTrash, BIconPenFill } from 'bootstrap-icons-vue';
-import NoteInstruments from "./NoteInstruments.vue";
 
 export default {
     components: {
-        BIconTrash, BIconPenFill, Progress, NoteInstruments
+        BIconTrash, BIconPenFill, Progress
     },
-    props: ['user'],
+    props: ['user', 'noteCode'],
+    emits: ['showIssueNotes'],
     data() {
         return {
             isLoading: false,
             searchQuery: null,
             issueNotes: null,
-            message: "Needs to get requisition issue notes",
+            message: "Needs to get note instruments",
 
             collections: {
-                issueNotes: null,
+                noteInstruments: null,
             },
 
             pagination: {
@@ -29,10 +29,7 @@ export default {
                 modal: null,
                 title: null,
                 message: null,
-            },
-
-            activeView: null,
-            noteCode: null,
+            }
         };
     },
     methods: {
@@ -42,7 +39,7 @@ export default {
             this.message = resData.message;
             const pageData = resData.data;
             //And this third data is from pagination
-            this.collections.issueNotes = pageData.data;
+            this.collections.noteInstruments = pageData.data;
 
             //Pagination details
             this.pagination = {
@@ -71,13 +68,13 @@ export default {
             });
             this.pagination.links = tempLinks;
         },
-        async getIssueNotes() {
+        async getNoteInstruments() {
             this.isLoading = true;
 
             let uri = this.api;
-            uri += "/issue-notes/records/";
+            uri += "/instruments/note/"+this.noteCode+"/records/";
             uri += this.pagination.records;
-            uri += "?page" + this.pagination.currentPage;
+            uri += "?page=" + this.pagination.currentPage;
 
             await this.axios.get(uri).then((res) => {
                 if (res.status == 200) {
@@ -91,45 +88,36 @@ export default {
                 this.isLoading = false;
             });
         },
-        async sign(noteCode) {
+        async register(itemCode) {
             this.isLoading = true;
-
-            const data = {
-                "note_code": noteCode,
-            };
-
-            await this.axios.patch(this.api + "/issue-notes/sign", data).then((res) => {
+            console.log(itemCode)
+            await this.axios.post(this.api + "/instruments/note/"+itemCode+"/register").then((res) => {
                 const resData = res.data;
                 this.notification.title = "Succeeded";
                 this.notification.message = resData.message;
             }).catch((err) => {
                 const res = err.response;
                 const resData = res.data;
+
                 this.notification.title = "Failed";
                 this.notification.message = resData.message;
             }).finally(() => {
                 this.isLoading = false;
                 this.notification.modal.show();
-                this.getIssueNotes();
             });
-        },
-
-        showNoteInstruments(noteCode) {
-            this.noteCode = noteCode;
-            this.activeView = NoteInstruments;
         }
     },
     mounted() {
-        this.getIssueNotes();
+        this.getNoteInstruments();
         this.notification.modal = this.Modal.getOrCreateInstance(
-            document.getElementById("issueNoteNotification"), { backdrop: "static", keyboard: false }
+            document.getElementById("registerInstrumentNotification"), { backdrop: "static", keyboard: false }
         );
     }
 }
 </script>
 
 <template>
-    <div class="modal fade" id="issueNoteNotification" tabindex="-1" aria-labelledby="createIssueNoteLabel"
+    <div class="modal fade" id="registerInstrumentNotification" tabindex="-1" aria-labelledby="createIssueNoteLabel"
             aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content container-bg">
@@ -158,48 +146,40 @@ export default {
         </div>
     </div> -->
 
-    <div v-if="activeView == null" class="row">
-        <Progress v-if="isLoading" message="Fetching issue notes" />
+    <button class="btn btn-secondary" @click="$emit('showIssueNotes')" aria-current="page">
+        Back to Issue Notes
+    </button>
+    <div class="row">
+        <Progress v-if="isLoading" message="Fetching note instruments" />
 
-        <h2 class="p-5 text-center" v-else-if="collections.issueNotes == null">
+        <h2 class="p-5 text-center" v-else-if="collections.noteInstruments == null">
             {{ message }}
         </h2>
-        <h2 class="p-5 text-center" v-else-if="collections.issueNotes.length == 0">
+        <h2 class="p-5 text-center" v-else-if="collections.noteInstruments.length == 0">
             {{ message }}
         </h2>
         <table v-else class="table table-hover">
             <thead>
                 <tr>
-                    <th>Note Code</th>
-                    <!-- <th>Store</th> -->
-                    <th>Department</th>
-                    <th>Requester</th>
-                    <th>HOD sign</th>
-                    <th>Store Officer sign</th>
-                    <th>Instruments</th>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>Unit</th>
+                    <th>Requested</th>
+                    <th>Supplied</th>
+                    <!-- <th>Store Officer sign</th> -->
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="note in collections.issueNotes">
-                    <td>{{ note.note_code }}</td>
-                    <!-- <td>{{ note.store.name }}</td> -->
-                    <td>{{ note.department.name }}</td>
-                    <td>{{ note.requester.first_name }}</td>
+                <tr v-for="instrument in collections.noteInstruments">
+                    <td>{{ instrument.item_code }}</td>
+                    <td>{{ instrument.item_description }}</td>
+                    <td>{{ instrument.issue_unit }}</td>
+                    <td>{{ instrument.requested }}</td>
+                    <td>{{ instrument.supplied }}</td>
                     <td>
-                        <button v-if="note.hod_signature == null && (user.role.id == 2 || user.role.id == 3 || user.role.id == 5)" class="btn btn-success" @click="sign(note.note_code)">
-                            Sign
-                        </button>
-                        <span v-else-if="note.hod_signature != null">{{ note.hod_signature.last_name }}</span>
-                    </td>
-                    <td>
-                        <button v-if="note.store_officer_signature == null && (user.role.id == 8)" class="btn btn-success" @click="sign(note.note_code)">
-                            Sign
-                        </button>
-                        <span v-else-if="note.store_officer_signature != null"> {{ note.store_officer_signature.last_name }} </span>
-                    </td>
-                    <td>
-                        <button v-if="user.role.id == 1 || user.role.id == 2 || user.role.id == 3 || user.role.id == 5 || user.role.id == 8 || (user.role.id == 4 && note.hod_signature != null && note.store_officer_signature != null)" class="btn btn-success" @click="showNoteInstruments(note.note_code)">
-                            View
+                        <button v-if="(user.role.id == 1 || user.role.id == 4) && instrument.supplied == null" class="btn btn-success" @click="register(instrument.item_code)">
+                            Register
                         </button>
                     </td>
                     <td>
@@ -224,7 +204,7 @@ export default {
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        notes per page
+                        items per page
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="7">
@@ -258,8 +238,6 @@ export default {
             </tfoot>
         </table>
     </div>
-
-    <component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" />
 </template>
 
 <style></style>

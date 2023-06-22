@@ -27,6 +27,7 @@ export default {
         assets: {
           mark: false,
           requisitions: false,
+          registration: false,
           transfers: false,
           reports: false,
         }
@@ -64,6 +65,7 @@ export default {
     },
     resetAssetsNav() {
       this.nav.assets.requisitions  = false;
+      this.nav.assets.registration  = false;
       this.nav.assets.transfers     = false;
       this.nav.assets.reports       = false;
     },
@@ -74,6 +76,11 @@ export default {
         case 'requisitions': {
           this.changeLocation("/requisitions");
           this.nav.assets.requisitions = true;
+        } break;
+
+        case 'registration': {
+          this.changeLocation("/assets-registration");
+          this.nav.assets.registration = true;
         } break;
 
         case 'transfers': {
@@ -117,9 +124,9 @@ export default {
         this.nav.departments = isActive;
       } else if (path == "/stores") {
         this.nav.stores = isActive;
-      } else if (path == "/requisitions") {
+      } else if (path == "/requisitions" || "/registration" || "/transfers" || "/reports") {
         this.nav.assets.mark = isActive;
-      }
+      } 
     },
   },
   computed: {
@@ -201,14 +208,14 @@ export default {
                     </div>
                   </RouterLink>
                 </li>
-                <li v-if="user.role.id == 1" class="nav-item">
+                <!-- <li v-if="user.role.id == 1" class="nav-item">
                   <RouterLink class="nav-link col" :class="{ active: nav.stores }" :aria-current="{ page: nav.stores }" @click="changeLocation('/stores')" to="/stores">
                     <div class="row justify-content-center text-center">
                       <BIconBuilding />
                       <span class="col">Stores</span>
                     </div>
                   </RouterLink>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown">
                   <a class="nav-link" href="#" role="button" :class="{ active: nav.assets.mark }" aria-expanded="false">
                     <div class="row justify-content-center text-center">
@@ -224,15 +231,21 @@ export default {
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                      <a @click="updateAssetsNav('transfers')" class="disabled dropdown-item" :class="{ active: nav.assets.transfers }">
-                        Transfers
-                      </a>
+                      <RouterLink to="/assets-registration" @click="updateAssetsNav('registration')" class="dropdown-item" :class="{ active: nav.assets.registration }">
+                        Registration
+                      </RouterLink>
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                      <a @click="updateAssetsNav('reports')" class="disabled dropdown-item" :class="{ active: nav.assets.reports }">
+                      <RouterLink to="transfers" @click="updateAssetsNav('transfers')" class="dropdown-item" :class="{ active: nav.assets.transfers }">
+                        Transfers
+                      </RouterLink>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <RouterLink to="reports" @click="updateAssetsNav('reports')" class="dropdown-item" :class="{ active: nav.assets.reports }">
                         Reports
-                      </a>
+                      </RouterLink>
                     </li>
                   </ul>
                 </li>

@@ -9,7 +9,7 @@ export default {
             description: null,
             unit: null,
             quantity: null,
-            
+
             payload: {
                 department: null,
                 store: null,
@@ -34,8 +34,8 @@ export default {
     methods: {
         clearFields() {
             this.payload.items = [];
-            this.payload.department     = null;
-            this.payload.store          = null;
+            this.payload.department = null;
+            this.payload.store = null;
         },
         async createIssueNote() {
             if (this.payload.items.length == 0) {
@@ -47,8 +47,8 @@ export default {
 
                 const data = {
                     "items": this.payload.items,
-                    "department": this.payload.department,
-                    // "store": this.payload.store,
+                    // "department": this.payload.department,
+                    "store": this.payload.store,
                 };
 
                 await this.axios.post(this.api + "/issue-notes", data).then((res) => {
@@ -98,7 +98,7 @@ export default {
             };
 
             this.payload.items.push(itemDetails);
-            
+
             this.description = null;
             this.quantity = null;
             this.unit = null;
@@ -148,8 +148,8 @@ export default {
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <input type="text" v-model="description" class="form-control" id="description" aria-describedby="description"
-                                autocomplete="true" required />
+                            <input type="text" v-model="description" class="form-control" id="description"
+                                aria-describedby="description" autocomplete="true" required />
                         </div>
                         <div class="mb-3">
                             <label for="unit" class="form-label">Unit</label>
@@ -158,8 +158,8 @@ export default {
                         </div>
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" v-model="quantity" class="form-control" id="quantity" aria-describedby="quantity"
-                                autocomplete="true" min="1" required />
+                            <input type="number" v-model="quantity" class="form-control" id="quantity"
+                                aria-describedby="quantity" autocomplete="true" min="1" required />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -175,10 +175,25 @@ export default {
     <div class="card p-5 m-5">
         <form ref="createIssueNoteForm" @submit.prevent="onSubmit">
             <div class="card-header">
-                <h3 class="text-center card-title" id="createIssueNoteLabel">FILL REQUISITION AND ISSUE NOTE</h3>
+                <h3 class="text-center card-title" id="createIssueNoteLabel">REGISTER ASSET</h3>
             </div>
             <div class="card-body">
-                <div class="mb-3" v-if="user.role.id == 1">
+                <div class="mb-3">
+                    <label for="code" class="form-label">Registration Code</label>
+                    <input type="text" v-model="code" class="form-control" id="code" aria-describedby="code"
+                        autocomplete="true" required />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" v-model="description" class="form-control" id="description" aria-describedby="description"
+                        autocomplete="true" required />
+                </div>
+                <div class="mb-3">
+                    <label for="unit" class="form-label">Unit</label>
+                    <input type="text" v-model="unit" class="form-control" id="unit" aria-describedby="unit"
+                        autocomplete="true" required />
+                </div>
+                <div class="mb-3">
                     <label for="department" class="form-label">Department</label>
                     <select required placeholder="Select" v-model="payload.department" class="form-control" id="deparment">
                         <option disabled>Select department</option>
@@ -193,23 +208,15 @@ export default {
                     </select>
                 </div> -->
 
-                <div class="row mb-3">
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addIssueNoteItems">
-                        Add Items
-                    </button>
-                    <div v-if="payload.items.length == 0" class="row mb-2">
-                        <em>No items attached</em>
-                    </div>
-                    <div v-else class="row mb-2">
-                        <span @click="detachInstrument(attachedInstrument.instrument_id)" title="Click to remove" v-for="item in payload.items" class="mb-2 mx-2 px-auto col-md-2 tile-accordion badge bg-primary">
-                            {{ item.description }} {{ item.quantity }} {{ item.unit }}
-                        </span>
-                    </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" v-model="quantity" class="form-control" id="quantity" aria-describedby="quantity"
+                        autocomplete="true" min="1" required />
                 </div>
             </div>
             <div class="card-footer row">
                 <button type="submit" @click="createIssueNote()" class="btn btn-success">
-                    <span :hidden="isLoading">Submit </span>
+                    <span :hidden="isLoading">Register </span>
                     <div :hidden="!isLoading" class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>

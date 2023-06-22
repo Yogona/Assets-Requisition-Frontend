@@ -1,11 +1,11 @@
 <script>
 import Progress from '../../../../components/Progress.vue';
 import { BIconTrash, BIconPenFill } from 'bootstrap-icons-vue';
-import NoteInstruments from "./NoteInstruments.vue";
+// import NoteInstruments from "./NoteInstruments.vue";
 
 export default {
     components: {
-        BIconTrash, BIconPenFill, Progress, NoteInstruments
+        BIconTrash, BIconPenFill, Progress
     },
     props: ['user'],
     data() {
@@ -130,7 +130,7 @@ export default {
 
 <template>
     <div class="modal fade" id="issueNoteNotification" tabindex="-1" aria-labelledby="createIssueNoteLabel"
-            aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content container-bg">
                 <div class="modal-header">
@@ -171,7 +171,7 @@ export default {
             <thead>
                 <tr>
                     <th>Note Code</th>
-                    <!-- <th>Store</th> -->
+                    <th>Store</th>
                     <th>Department</th>
                     <th>Requester</th>
                     <th>HOD sign</th>
@@ -182,23 +182,29 @@ export default {
             <tbody>
                 <tr v-for="note in collections.issueNotes">
                     <td>{{ note.note_code }}</td>
-                    <!-- <td>{{ note.store.name }}</td> -->
+                    <td>{{ note.store.name }}</td>
                     <td>{{ note.department.name }}</td>
                     <td>{{ note.requester.first_name }}</td>
                     <td>
-                        <button v-if="note.hod_signature == null && (user.role.id == 2 || user.role.id == 3 || user.role.id == 5)" class="btn btn-success" @click="sign(note.note_code)">
+                        <button
+                            v-if="note.hod_signature == null && (user.role.id == 2 || user.role.id == 3 || user.role.id == 5)"
+                            class="btn btn-success" @click="sign(note.note_code)">
                             Sign
                         </button>
                         <span v-else-if="note.hod_signature != null">{{ note.hod_signature.last_name }}</span>
                     </td>
                     <td>
-                        <button v-if="note.store_officer_signature == null && (user.role.id == 8)" class="btn btn-success" @click="sign(note.note_code)">
+                        <button v-if="note.store_officer_signature == null && (user.role.id == 8)" class="btn btn-success"
+                            @click="sign(note.note_code)">
                             Sign
                         </button>
-                        <span v-else-if="note.store_officer_signature != null"> {{ note.store_officer_signature.last_name }} </span>
+                        <span v-else-if="note.store_officer_signature != null"> {{ note.store_officer_signature.last_name }}
+                        </span>
                     </td>
                     <td>
-                        <button v-if="user.role.id == 1 || user.role.id == 2 || user.role.id == 3 || user.role.id == 5 || user.role.id == 8 || (user.role.id == 4 && note.hod_signature != null && note.store_officer_signature != null)" class="btn btn-success" @click="showNoteInstruments(note.note_code)">
+                        <button
+                            v-if="user.role.id == 1 || user.role.id == 2 || user.role.id == 3 || user.role.id == 5 || user.role.id == 8 || (user.role.id == 4 && note.hod_signature != null && note.store_officer_signature != null)"
+                            class="btn btn-success" @click="showNoteInstruments(note.note_code)">
                             View
                         </button>
                     </td>
@@ -229,9 +235,9 @@ export default {
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="7">
 
-                        <nav  aria-label="...">
+                        <nav aria-label="...">
                             <ul class="pagination justify-content-end">
-                                <li class="page-item" :class="{ disabled: pagination.firstPageUrl == null }"> 
+                                <li class="page-item" :class="{ disabled: pagination.firstPageUrl == null }">
                                     <span v-if="pagination.firstPageUrl == null" class="page-link">First</span>
                                     <a v-else class="page-link" @click="getUsers(1)">First</a>
                                 </li>
@@ -239,7 +245,8 @@ export default {
                                     <span v-if="pagination.prevPageUrl == null" class="page-link">Previous</span>
                                     <a v-else class="page-link" @click="getUsers(--pagination.currentPage)">Previous</a>
                                 </li>
-                                <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }" v-for="link in pagination.links">
+                                <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }"
+                                    v-for="link in pagination.links">
                                     <span v-if="link.active" class="page-link">{{ link.label }}</span>
                                     <a v-else class="page-link" @click="getUsers()">{{ link.label }}</a>
                                 </li>
@@ -247,7 +254,7 @@ export default {
                                     <span v-if="pagination.prevPageUrl == null" class="page-link">Next</span>
                                     <a v-else class="page-link" @click="getUsers(++pagination.currentPage)">Next</a>
                                 </li>
-                                <li class="page-item " :class="{ disabled: pagination.lastPageUrl == null }"> 
+                                <li class="page-item " :class="{ disabled: pagination.lastPageUrl == null }">
                                     <span v-if="pagination.lastPageUrl == null" class="page-link">Last</span>
                                     <a v-else class="page-link" @click="getUsers(pagination.lastPage)">Last</a>
                                 </li>
@@ -257,9 +264,8 @@ export default {
                 </tr>
             </tfoot>
         </table>
-    </div>
+</div>
 
-    <component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" />
-</template>
+<component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" /></template>
 
 <style></style>

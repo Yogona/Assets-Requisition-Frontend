@@ -76,7 +76,7 @@ export default {
     <span class="mb-1">ARDHI UNIVERSITY</span>
   </div>
   <div class="text-center h4">
-    <strong class="mb-5 text-center">ASSESTS REQUISITION AND TRANSAFER SYSTEM</strong>
+    <strong class="mb-5 text-center">ASSESTS REQUISITION AND TRANSFER SYSTEM</strong>
   </div>
 
   <div id="login-pane" class="container-bg white-text">

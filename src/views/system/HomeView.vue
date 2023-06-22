@@ -8,6 +8,8 @@ export default {
   data() {
     return {
       users: 0,
+      departs: 0,
+      stores: 0,
     };
   },
   methods: {
