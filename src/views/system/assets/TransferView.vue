@@ -56,8 +56,8 @@ export default {
         },
         checkView() {
             let roleId = this.user.role.id;
-            if (roleId != 1 && roleId != 7) {
-                this.currentView = viewInstruments;
+            if (roleId != 1 && roleId != 2) {
+                this.currentView = TransferRequests;
                 this.activePill.transferRequests = true;
             }
         }
@@ -72,7 +72,7 @@ export default {
 <template>
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
-            <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
+            <li v-if="user.role.id == 1 || user.role.id == 2" class="nav-item">
                 <button class="nav-link" @click="activeView = 'fill-form'"
                     :class="{ active: activePill.assetsTransferForm }"
                     :aria-current="{ page: activePill.assetsTransferForm }">
