@@ -241,12 +241,12 @@ export default {
                         Transfers
                       </RouterLink>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
+                    <!-- <li><hr class="dropdown-divider"></li>
                     <li>
                       <RouterLink to="reports" @click="updateAssetsNav('reports')" class="dropdown-item disabled" :class="{ active: nav.assets.reports }">
                         Reports
                       </RouterLink>
-                    </li>
+                    </li> -->
                   </ul>
                 </li>
               </ul>
