@@ -1,10 +1,10 @@
 <script>
-import RegisterInstruments from './instruments/RegisterInstruments.vue';
-import ViewInstruments from './instruments/ViewInstruments.vue';
+import RegisterAssets from './assets/RegisterAssets.vue';
+import ViewAssets from './assets/ViewAssets.vue';
 
 export default {
     components: {
-        RegisterInstruments, ViewInstruments
+        RegisterAssets, ViewAssets
     },
     props: {
         user: Object,
@@ -12,7 +12,7 @@ export default {
     data() {
         return {
             decentUser: null,
-            currentView: RegisterInstruments,
+            currentView: RegisterAssets,
             activeView: 'register-assets',
             activePill: {
                 registerAssets: true,
@@ -31,12 +31,12 @@ export default {
         changeView(name) {
             switch (name) {
                 case 'register-assets': {
-                    this.currentView = RegisterInstruments;
+                    this.currentView = RegisterAssets;
                 }
                     break;
 
                 case 'view-assets': {
-                    this.currentView = ViewInstruments;
+                    this.currentView = ViewAssets;
                 }
                     break;
             }
@@ -56,8 +56,8 @@ export default {
         },
         checkView() {
             let roleId = this.user.role.id;
-            if (roleId != 1 && roleId != 7) {
-                this.currentView = viewInstruments;
+            if (roleId != 1 && roleId != 4) {
+                this.currentView = ViewAssets;
                 this.activePill.viewAssets = true;
             }
         }
@@ -71,7 +71,7 @@ export default {
 <template>
     <main>
         <ul class="nav nav-pills justify-content-evenly text-center mb-1">
-            <li v-if="user.role.id == 1 || user.role.id == 7" class="nav-item">
+            <li v-if="user.role.id == 1 || user.role.id == 4" class="nav-item">
                 <button class="nav-link" @click="activeView = 'register-assets'" :class="{ active: activePill.registerAssets }"
                     :aria-current="{ page: activePill.registerAssets }">
                     Register Assets
