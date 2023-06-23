@@ -176,7 +176,7 @@ export default {
                     <th>Requester</th>
                     <th>HOD sign</th>
                     <th>Store Officer sign</th>
-                    <th>Instruments</th>
+                    <th>Assets</th>
                 </tr>
             </thead>
             <tbody>

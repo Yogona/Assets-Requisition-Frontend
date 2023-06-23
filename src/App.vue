@@ -208,14 +208,14 @@ export default {
                     </div>
                   </RouterLink>
                 </li>
-                <!-- <li v-if="user.role.id == 1" class="nav-item">
+                <li v-if="user.role.id == 1" class="nav-item">
                   <RouterLink class="nav-link col" :class="{ active: nav.stores }" :aria-current="{ page: nav.stores }" @click="changeLocation('/stores')" to="/stores">
                     <div class="row justify-content-center text-center">
                       <BIconBuilding />
                       <span class="col">Stores</span>
                     </div>
                   </RouterLink>
-                </li> -->
+                </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link" role="button" :class="{ active: nav.assets.mark }" aria-expanded="false">
                     <div class="row justify-content-center text-center">

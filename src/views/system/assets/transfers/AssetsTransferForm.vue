@@ -34,9 +34,9 @@ export default {
     },
     methods: {
         clearFields() {
-            this.payload.items = [];
-            this.payload.department = null;
-            this.payload.store = null;
+            this.payload.assets = [];
+            this.payload.fromDepartment = null;
+            this.payload.toDepartment = null;
         },
         async requestAssetTransfer() {
             if (this.payload.assets.length == 0) {
@@ -46,13 +46,7 @@ export default {
             } else if (this.$refs.createIssueNoteForm.checkValidity()) {
                 this.isLoading = true;
 
-                const data = {
-                    "items": this.payload.items,
-                    // "department": this.payload.department,
-                    "store": this.payload.store,
-                };
-
-                await this.axios.post(this.api + "/issue-notes", data).then((res) => {
+                await this.axios.post(this.api + "/assets/transfers/request", this.payload).then((res) => {
                     const resData = res.data;
                     this.notification.title = "Succeeded";
                     this.notification.message = resData.message;
@@ -108,7 +102,7 @@ export default {
                 };
     
                 this.payload.assets.push(itemDetails);
-
+console.log(this.payload)
                 this.asset = null;
                 this.quantity = null;            
             }

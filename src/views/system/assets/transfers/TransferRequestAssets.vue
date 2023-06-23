@@ -1,22 +1,22 @@
 <script>
 import Progress from '../../../../components/Progress.vue';
 import { BIconTrash, BIconPenFill } from 'bootstrap-icons-vue';
-import TransferRequestAssets from './TransferRequestAssets.vue';
 
 export default {
     components: {
-        BIconTrash, BIconPenFill, Progress, TransferRequestAssets
+        BIconTrash, BIconPenFill, Progress
     },
-    props: ['user'],
+    props: ['user', 'requestId'],
+    emits: ['showTransferReuests'],
     data() {
         return {
             isLoading: false,
             searchQuery: null,
             issueNotes: null,
-            message: "Did not fetch assets transfer requests.",
+            message: "Did not fetch transfer request assets.",
 
             collections: {
-                requests: null,
+                assets: null,
             },
 
             pagination: {
@@ -29,10 +29,7 @@ export default {
                 modal: null,
                 title: null,
                 message: null,
-            },
-
-            activeView: null,
-            requestId: null,
+            }
         };
     },
     methods: {
@@ -42,7 +39,7 @@ export default {
             this.message = resData.message;
             const pageData = resData.data;
             //And this third data is from pagination
-            this.collections.requests = pageData.data;
+            this.collections.assets = pageData.data;
 
             //Pagination details
             this.pagination = {
@@ -71,13 +68,13 @@ export default {
             });
             this.pagination.links = tempLinks;
         },
-        async getTransferRequests() {
+        async getAssets() {
             this.isLoading = true;
 
             let uri = this.api;
-            uri += "/assets/transfers/records/";
+            uri += "/assets/transfers/request/" + this.requestId + "/records/";
             uri += this.pagination.records;
-            uri += "?page" + this.pagination.currentPage;
+            uri += "?page=" + this.pagination.currentPage;
 
             await this.axios.get(uri).then((res) => {
                 if (res.status == 200) {
@@ -91,45 +88,18 @@ export default {
                 this.isLoading = false;
             });
         },
-        async sign(request) {
-            this.isLoading = true;
-
-            const data = {
-                "transferId": request.id,
-            };
-
-            await this.axios.patch(this.api + "/assets/transfers/sign", data).then((res) => {
-                const resData = res.data;
-                this.notification.title = "Succeeded";
-                this.notification.message = resData.message;
-            }).catch((err) => {
-                const res = err.response;
-                const resData = res.data;
-                this.notification.title = "Failed";
-                this.notification.message = resData.message;
-            }).finally(() => {
-                this.isLoading = false;
-                this.notification.modal.show();
-                this.getTransferRequests();
-            });
-        },
-
-        showTransferRequestAssets(requestId) {
-            this.requestId = requestId;
-            this.activeView = TransferRequestAssets;
-        }
     },
     mounted() {
-        this.getTransferRequests();
+        this.getAssets();
         this.notification.modal = this.Modal.getOrCreateInstance(
-            document.getElementById("issueNoteNotification"), { backdrop: "static", keyboard: false }
+            document.getElementById("registerInstrumentNotification"), { backdrop: "static", keyboard: false }
         );
     }
 }
 </script>
 
 <template>
-    <div class="modal fade" id="issueNoteNotification" tabindex="-1" aria-labelledby="createIssueNoteLabel"
+    <div class="modal fade" id="registerInstrumentNotification" tabindex="-1" aria-labelledby="createIssueNoteLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content container-bg">
@@ -158,51 +128,36 @@ export default {
         </div>
     </div> -->
 
-    <div v-if="activeView == null" class="row">
-        <Progress v-if="isLoading" message="Fetching assets transfer requests." />
+    <button class="btn btn-secondary" @click="$emit('showTransferRequests')" aria-current="page">
+        Back to Transfer Requests
+    </button>
+    <div class="row">
+        <Progress v-if="isLoading" message="Fetching transfer request assets." />
 
-        <h2 class="p-5 text-center" v-else-if="collections.requests == null">
+        <h2 class="p-5 text-center" v-else-if="collections.assets == null">
             {{ message }}
         </h2>
-        <h2 class="p-5 text-center" v-else-if="collections.requests.length == 0">
+        <h2 class="p-5 text-center" v-else-if="collections.assets.length == 0">
             {{ message }}
         </h2>
         <table v-else class="table table-hover">
             <thead>
                 <tr>
-                    <th>From department</th>
-                    <th>To department</th>
-                    <th>Release sign</th>
-                    <th>Acceptance sign</th>
-                    <th>Approval sign</th>
-                    <th>Assets</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="request in collections.requests">
-                    <td>{{ request.from_department.name }}</td>
-                    <td>{{ request.to_department.name }}</td>
+                <tr v-for="asset in collections.assets">
+                    <td>{{ asset.department_asset.instrument.instrument_code }}</td>
+                    <td>{{ asset.department_asset.instrument.description }}</td>
+                    <td>{{ asset.quantity }}</td>
                     <td>
-                        <span v-if="request.release_sign">{{ request.release_sign.last_name }}</span>
-                        <button v-else-if="user.role.id == 2 && user.department.id == request.from_department.id" @click="sign(request)" class="btn btn-success">
-                            Sign 
-                        </button>
-                    </td>
-                    <td>
-                        <span v-if="request.acceptance_sign">{{ request.release_sign.last_name }}</span>
-                        <button v-else-if="user.role.id == 2 && user.department.id == request.to_department.id" @click="sign(request)" class="btn btn-success">
-                            Sign 
-                        </button>
-                    </td>
-                    <td>
-                        <span v-if="request.approval_sign">{{ request.approval_sign.last_name }}</span>
-                        <button v-else-if="user.role.id == 4" @click="sign(request)" class="btn btn-success">
-                            Sign 
-                        </button>
-                    </td>
-                    <td>
-                        <button @click="showTransferRequestAssets(request.id)" class="btn btn-success">
-                            View 
+                        <button v-if="(user.role.id == 1 || user.role.id == 4) && instrument.supplied == null"
+                            class="btn btn-success" @click="register(instrument.item_code)">
+                            Register
                         </button>
                     </td>
                     <td>
@@ -219,7 +174,7 @@ export default {
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="1">
+                    <td colspan="3">
                         <select v-model="pagination.records" @change="getUsers()" class="form-control">
                             <option value="5">5</option>
                             <option value="10" selected>10</option>
@@ -227,10 +182,10 @@ export default {
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        notes per page
+                        items per page
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
-                    <td colspan="5">
+                    <td colspan="7">
 
                         <nav aria-label="...">
                             <ul class="pagination justify-content-end">
@@ -262,8 +217,6 @@ export default {
             </tfoot>
         </table>
     </div>
-
-    <component v-else :is="activeView" :user="user" :request-id="requestId" @show-transfer-requests="activeView = null" />
 </template>
 
 <style></style>
