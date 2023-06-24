@@ -90,8 +90,8 @@ export default {
         },
         async register(itemCode) {
             this.isLoading = true;
-            
-            await this.axios.post(this.api + "/instruments/note/"+this.noteCode+"/register/"+itemCode).then((res) => {
+            const data = { itemCode: itemCode };
+            await this.axios.post(this.api + "/instruments/note/"+this.noteCode+"/register", data).then((res) => {
                 const resData = res.data;console.log(resData)
                 this.notification.title = "Succeeded";
                 this.notification.message = resData.message;
