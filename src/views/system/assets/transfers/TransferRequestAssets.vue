@@ -155,12 +155,6 @@ export default {
                     <td>{{ asset.department_asset.instrument.description }}</td>
                     <td>{{ asset.quantity }}</td>
                     <td>
-                        <button v-if="(user.role.id == 1 || user.role.id == 4) && instrument.supplied == null"
-                            class="btn btn-success" @click="register(instrument.item_code)">
-                            Register
-                        </button>
-                    </td>
-                    <td>
                         <div class="row gx-3">
                             <!-- <div class="col">
                                 <BIconPenFill @click="preFillUpdatingFields(user)" class="icon-color" data-bs-toggle="modal" data-bs-target="#update-profile-modal" />
@@ -174,7 +168,7 @@ export default {
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="1">
                         <select v-model="pagination.records" @change="getUsers()" class="form-control">
                             <option value="5">5</option>
                             <option value="10" selected>10</option>
@@ -185,7 +179,7 @@ export default {
                         items per page
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
-                    <td colspan="7">
+                    <td colspan="2">
 
                         <nav aria-label="...">
                             <ul class="pagination justify-content-end">

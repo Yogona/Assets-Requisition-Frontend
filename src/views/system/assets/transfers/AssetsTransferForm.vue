@@ -102,9 +102,13 @@ export default {
                 };
     
                 this.payload.assets.push(itemDetails);
-console.log(this.payload)
                 this.asset = null;
                 this.quantity = null;            
+            }
+        },
+        validateQuantity() {
+            if (this.quantity > this.asset.quantity) {
+                this.quantity = this.asset.quantity;
             }
         }
     },
@@ -154,12 +158,12 @@ console.log(this.payload)
                             <label for="asset" class="form-label">Asset</label>
                             <select required placeholder="Select" v-model="asset" class="form-control" id="deparment">
                                 <option disabled>Select asset</option>
-                                <option v-for="asset in collections.assets" :value="asset">{{ asset.instrument.description }}</option>
+                                <option v-for="asset in collections.assets" :value="asset">{{ asset.instrument.description }} (available - {{ asset.quantity }})</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div v-if="asset != null" class="mb-3">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" v-model="quantity" class="form-control" id="quantity"
+                            <input type="number" @keypress="validateQuantity" @change="validateQuantity" v-model="quantity" class="form-control" id="quantity"
                                 aria-describedby="quantity" autocomplete="true" min="1" required />
                         </div>
                     </div>
