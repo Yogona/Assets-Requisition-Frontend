@@ -6,7 +6,7 @@ export default {
     components: {
         BIconTrash, BIconPenFill, Progress
     },
-    props: ['user', 'noteCode'],
+    props: ['user', 'noteCode', 'isSigned'],
     emits: ['showIssueNotes'],
     data() {
         return {
@@ -90,9 +90,9 @@ export default {
         },
         async register(itemCode) {
             this.isLoading = true;
-            console.log(itemCode)
-            await this.axios.post(this.api + "/instruments/note/"+itemCode+"/register").then((res) => {
-                const resData = res.data;
+            
+            await this.axios.post(this.api + "/instruments/note/"+this.noteCode+"/register/"+itemCode).then((res) => {
+                const resData = res.data;console.log(resData)
                 this.notification.title = "Succeeded";
                 this.notification.message = resData.message;
             }).catch((err) => {
@@ -178,7 +178,7 @@ export default {
                     <td>{{ instrument.requested }}</td>
                     <td>{{ instrument.supplied }}</td>
                     <td>
-                        <button v-if="(user.role.id == 1 || user.role.id == 4) && instrument.supplied == null" class="btn btn-success" @click="register(instrument.item_code)">
+                        <button v-if="!instrument.registered && isSigned && (user.role.id == 1 || user.role.id == 4) && instrument.supplied == null" class="btn btn-success" @click="register(instrument.item_code)">
                             Register
                         </button>
                     </td>

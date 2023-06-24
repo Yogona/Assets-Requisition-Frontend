@@ -11,6 +11,7 @@ export default {
     data() {
         return {
             isLoading: false,
+            isSigned: false,
             searchQuery: null,
             issueNotes: null,
             message: "Needs to get requisition issue notes",
@@ -114,9 +115,10 @@ export default {
             });
         },
 
-        showNoteInstruments(noteCode) {
+        showNoteInstruments(noteCode, isSigned) {
             this.noteCode = noteCode;
             this.activeView = NoteInstruments;
+            this.isSigned = isSigned;
         }
     },
     mounted() {
@@ -198,7 +200,7 @@ export default {
                         <span v-else-if="note.store_officer_signature != null"> {{ note.store_officer_signature.last_name }} </span>
                     </td>
                     <td>
-                        <button v-if="user.role.id == 1 || user.role.id == 2 || user.role.id == 3 || user.role.id == 5 || user.role.id == 8 || (user.role.id == 4 && note.hod_signature != null && note.store_officer_signature != null)" class="btn btn-success" @click="showNoteInstruments(note.note_code)">
+                        <button v-if="user.role.id == 1 || user.role.id == 2 || user.role.id == 3 || user.role.id == 5 || user.role.id == 8 || (user.role.id == 4 && note.hod_signature != null && note.store_officer_signature != null)" class="btn btn-success" @click="showNoteInstruments(note.note_code, (note.hod_signature != null && note.store_officer_signature != null))">
                             View
                         </button>
                     </td>
@@ -259,7 +261,7 @@ export default {
         </table>
     </div>
 
-    <component v-else :is="activeView" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" />
+    <component v-else :is="activeView" :is-signed="isSigned" :user="user" :note-code="noteCode" @show-issue-notes="activeView = null" />
 </template>
 
 <style></style>
