@@ -6,7 +6,10 @@ export default {
             isLoading: false,
 
             name: null,
+            abbreviation: null,
             description: null,
+            departmentNumber: null,
+            buildingNumber: null,
 
             //Notification modal
             notification: {
@@ -18,8 +21,11 @@ export default {
     },
     methods: {
         clearFields() {
-            this.name = null;
-            this.description = null;
+            this.name               = null;
+            this.abbreviation       = null;
+            this.description        = null;
+            this.departmentNumber   = null;
+            this.buildingNumber     = null;
         },
         async createDepartment() {
             if (this.$refs.createDepartmentsForm.checkValidity()) {
@@ -27,7 +33,10 @@ export default {
 
                 const data = {
                     "name": this.name,
+                    "abbreviation": this.abbreviation,
                     "description": this.description,
+                    "departmentNumber": this.departmentNumber,
+                    "buildingNumber": this.buildingNumber
                 };
 
                 await this.axios.post(this.api + "/departs/create", data).then((res) => {
@@ -52,7 +61,6 @@ export default {
                     this.isLoading = false;
                     this.notification.modal.show();
                 });
-
             }
         },
     },
@@ -97,9 +105,24 @@ export default {
                         aria-describedby="name" autocomplete="true" required />
                 </div>
                 <div class="mb-3">
+                    <label for="abbreviation" class="form-label">Abbreviation</label>
+                    <input type="text" v-model="abbreviation" class="form-control" id="abbreviation"
+                        aria-describedby="abbreviation" autocomplete="true" required />
+                </div>
+                <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea v-model="description" class="form-control" id="description" autocomplete="true">
                     </textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="department-number" class="form-label">Department Number</label>
+                    <input type="text" v-model="departmentNumber" class="form-control" id="department-number"
+                        aria-describedby="department-number" autocomplete="true" required />
+                </div>
+                <div class="mb-3">
+                    <label for="building-number" class="form-label">Building Number</label>
+                    <input type="text" v-model="buildingNumber" class="form-control" id="building-number"
+                        aria-describedby="building-number" autocomplete="true" required />
                 </div>
             </div>
             <div class="card-footer row">
