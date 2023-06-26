@@ -1,14 +1,17 @@
 <script>
 import { BIconBoxArrowDownRight, BIconBoxArrowInRight } from 'bootstrap-icons-vue';
+import RegistrationView from './RegistrationView.vue';
 export default {
   props: ['user'],
   emits: ['locationChange', 'user'],
   components: {
     BIconBoxArrowDownRight,
-    BIconBoxArrowInRight
+    BIconBoxArrowInRight,
+    RegistrationView
 },
   data() {
     return {
+      isLogin: true,
       username: null,
       password: null,
       error: null,
@@ -79,7 +82,7 @@ export default {
     <strong class="mb-5 text-center">ASSESTS REQUISITION AND TRANSFER SYSTEM</strong>
   </div>
 
-  <div id="login-pane" class="container-bg white-text">
+  <div v-if="isLogin" id="login-pane" class="container-bg white-text">
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
@@ -93,7 +96,7 @@ export default {
         <div v-if="error" class="text-center mb-2">
           <span  class="error text-center">* {{  error }}</span>
         </div>
-        <div class="row">
+        <div class="row mb-4">
           <button type="submit" @click="login" class="btn">
             <span :hidden="isLoading">Login <BIconBoxArrowInRight class="icon" /></span>
             <div :hidden="!isLoading" class="spinner-border text-light" role="status">
@@ -101,8 +104,11 @@ export default {
             </div>
           </button>
         </div>
+        <a class="nav-item" @click="isLogin = false;">Registration</a>
       </form>
   </div>
+
+  <RegistrationView v-else @toggle-auth="isLogin = true" />
 </template>
 
 <style>
