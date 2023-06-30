@@ -81,13 +81,8 @@ export default {
                 }
             });
         },
-        async getUsers() {
+        async getUsers(url = this.api+"/users/role/" + this.selectedRole+"/records/" + this.pagination.records) {
             this.isLoading = true;
-
-            let url = this.api;
-            url += "/users/role/" + this.selectedRole;
-            url += "/records/" + this.pagination.records;
-            url += "?page=" + this.pagination.currentPage;
 
             await this.axios.get(url).then((res) => {
                 if (res.status == 200) {
@@ -391,28 +386,27 @@ export default {
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="7">
-    
                         <nav  aria-label="...">
                             <ul class="pagination justify-content-end">
                                 <li class="page-item" :class="{ disabled: pagination.firstPageUrl == null }"> 
                                     <span v-if="pagination.firstPageUrl == null" class="page-link">First</span>
-                                    <a v-else class="page-link" @click="getUsers(1)">First</a>
+                                    <a v-else class="page-link" @click="getUsers()">First</a>
                                 </li>
                                 <li class="page-item" :class="{ disabled: pagination.prevPageUrl == null }">
                                     <span v-if="pagination.prevPageUrl == null" class="page-link">Previous</span>
-                                    <a v-else class="page-link" @click="getUsers(--pagination.currentPage)">Previous</a>
+                                    <a v-else class="page-link" @click="getUsers(pagination.prevPageUrl)">Previous</a>
                                 </li>
                                 <li class="page-item" :class="{ active: link.active }" :aria-current="{ page: link.active }" v-for="link in pagination.links">
                                     <span v-if="link.active" class="page-link">{{ link.label }}</span>
-                                    <a v-else class="page-link" @click="getUsers()">{{ link.label }}</a>
+                                    <a v-else class="page-link" @click="getUsers(link.url)">{{ link.label }}</a>
                                 </li>
-                                <li class="page-item " :class="{ disabled: pagination.prevPageUrl == null }">
-                                    <span v-if="pagination.prevPageUrl == null" class="page-link">Next</span>
-                                    <a v-else class="page-link" @click="getUsers(++pagination.currentPage)">Next</a>
-                                </li>
-                                <li class="page-item " :class="{ disabled: pagination.lastPageUrl == null }"> 
+                                <!-- <li class="page-item " :class="{ disabled: pagination.nextPageUrl == null }">
+                                    <span v-if="pagination.nextPageUrl == null" class="page-link">Next</span>
+                                    <a v-else class="page-link" @click="getUsers(pagination.nextPageUrl)">Next</a>
+                                </li> -->
+                                <li class="page-item " :class="{ disabled: pagination.lastPageurl == null }"> 
                                     <span v-if="pagination.lastPageUrl == null" class="page-link">Last</span>
-                                    <a v-else class="page-link" @click="getUsers(pagination.lastPage)">Last</a>
+                                    <a v-else class="page-link" @click="getUsers(pagination.lastPageurl)">Last</a>
                                 </li>
                             </ul>
                         </nav>

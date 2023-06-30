@@ -198,7 +198,7 @@ export default {
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3">
+                    <td>
                         <select v-model="pagination.records" @change="getUsers()" class="form-control">
                             <option value="5">5</option>
                             <option value="10" selected>10</option>
@@ -206,7 +206,7 @@ export default {
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        notes per page
+                        assets per page
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="7">
