@@ -221,6 +221,9 @@ export default {
                         </span>
                     </div>
                 </div>
+                <div v-else>
+                    This from department has no assets, or you haven't selected a department yet.
+                </div>
                 <!-- <div class="mb-3">
                     <label for="store" class="form-label">Store</label>
                     <select required placeholder="Select" v-model="payload.store" class="form-control" id="store">

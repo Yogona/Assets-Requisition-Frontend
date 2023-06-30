@@ -223,7 +223,7 @@ export default {
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                      <RouterLink v-if="user.role.id == 4" to="/assets-registration" @click="updateAssetsNav('registration')" class="dropdown-item" :class="{ active: nav.assets.registration }">
+                      <RouterLink v-if="user.role.id == 1 || user.role.id == 4" to="/assets-registration" @click="updateAssetsNav('registration')" class="dropdown-item" :class="{ active: nav.assets.registration }">
                         Registration
                       </RouterLink>
                     </li>
