@@ -230,7 +230,6 @@ export default {
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="7">
-
                         <nav  aria-label="...">
                             <ul class="pagination justify-content-end">
                                 <li class="page-item" :class="{ disabled: pagination.firstPageUrl == null }"> 

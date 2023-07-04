@@ -99,7 +99,7 @@ export default {
             };
 
             await this.axios.patch(this.api + "/assets/transfers/sign", data).then((res) => {
-                const resData = res.data;
+                const resData = res.data;console.log(res)
                 this.notification.title = "Succeeded";
                 this.notification.message = resData.message;
             }).catch((err) => {
@@ -189,7 +189,7 @@ export default {
                         </button>
                     </td>
                     <td>
-                        <span v-if="request.acceptance_sign">{{ request.release_sign.last_name }}</span>
+                        <span v-if="request.acceptance_sign">{{ request.acceptance_sign.last_name }}</span>
                         <button v-else-if="user.role.id == 2 && user.department.id == request.to_department.id" @click="sign(request)" class="btn btn-success">
                             Sign 
                         </button>
@@ -227,7 +227,7 @@ export default {
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        notes per page
+                        transfer requests per page
                     </td>
                     <td>Showing {{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}</td>
                     <td colspan="5">
