@@ -83,7 +83,9 @@ export default {
             });
         },
         async getAssets() {
-            await this.axios.get(this.api + "/assets/department/"+this.payload.fromDepartment).then((res) => {
+            let uri = this.api + "/assets/department/" + this.payload.fromDepartment;
+            console.log(uri)
+            await this.axios.get(uri).then((res) => {
                 if (res.status == 200) {
                     this.collections.assets = res.data.data;
                 }
@@ -118,6 +120,8 @@ export default {
         );
         this.getDepartments();
         // this.getStores();
+        this.payload.fromDepartment = this.user.department.id;
+        this.getAssets();
     }
 }
 </script>
@@ -185,13 +189,17 @@ export default {
             <div class="card-body">
                 <div class="mb-3 row">
                     <div class="col">
-                        <label for="from-department" class="form-label">From Department</label>
-                        <select v-if="!isGettingDepartments" required placeholder="Select" @change="getAssets" v-model="payload.fromDepartment" class="form-control" id="from-deparment">
-                            <option disabled>Select department</option>
-                            <option v-for="depart in collections.departments" :value="depart.id">{{ depart.name }}</option>
-                        </select>
-                        <span v-else>
-                            Fetching departments
+                        <label for="from-department" class="form-label">
+                            From Department: <span v-if="user.role.id == 2">{{ user.department.name }}</span>
+                        </label>
+                        <span v-if="user.role.id == 1">
+                            <select v-if="!isGettingDepartments" required placeholder="Select" @change="getAssets" v-model="payload.fromDepartment" class="form-control" id="from-deparment">
+                                <option disabled>Select department</option>
+                                <option v-for="depart in collections.departments" :value="depart.id">{{ depart.name }}</option>
+                            </select>
+                            <span v-else>
+                                Fetching departments
+                            </span>
                         </span>
                     </div>
 
@@ -220,6 +228,9 @@ export default {
                             {{ payloadAsset.asset.instrument.unit }}
                         </span>
                     </div>
+                </div>
+                <div v-else-if="isGettingDepartments">
+                    Fetching department
                 </div>
                 <div v-else>
                     This from department has no assets, or you haven't selected a department yet.

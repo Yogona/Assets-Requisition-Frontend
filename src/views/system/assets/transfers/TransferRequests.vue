@@ -174,7 +174,8 @@ export default {
                     <th>To department</th>
                     <th>Release sign</th>
                     <th>Acceptance sign</th>
-                    <th>Approval sign</th>
+                    <th>Dean sign</th>
+                    <th>Custodian sign</th>
                     <th>Assets</th>
                 </tr>
             </thead>
@@ -195,7 +196,13 @@ export default {
                         </button>
                     </td>
                     <td>
-                        <span v-if="request.approval_sign">{{ request.approval_sign.last_name }}</span>
+                        <span v-if="request.dean_sign">{{ request.dean_sign.last_name }}</span>
+                        <button v-else-if="user.role.id == 3" @click="sign(request)" class="btn btn-success">
+                            Sign 
+                        </button>
+                    </td>
+                    <td>
+                        <span v-if="request.custodian_sign">{{ request.custodian_sign.last_name }}</span>
                         <button v-else-if="user.role.id == 4" @click="sign(request)" class="btn btn-success">
                             Sign 
                         </button>
