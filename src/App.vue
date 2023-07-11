@@ -216,7 +216,7 @@ export default {
                     </div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li>
+                    <li v-if="user.role.id != 4">
                       <RouterLink to="/requisitions" @click="updateAssetsNav('requisitions')" class="dropdown-item" :class="{ active: nav.assets.requisitions }">
                         Requisitions
                       </RouterLink>
@@ -234,7 +234,7 @@ export default {
                       </RouterLink>
                     </li>
                     <li><hr class="dropdown-divider"></li>
-                    <li v-if="user.role.id < 6">
+                    <li v-if="user.role.id == 1 || user.role.id == 4">
                       <RouterLink to="reports" @click="updateAssetsNav('reports')" class="dropdown-item" :class="{ active: nav.assets.reports }">
                         Reports
                       </RouterLink>
